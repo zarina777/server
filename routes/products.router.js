@@ -120,14 +120,9 @@ router.delete("/:id/likeds", async (req, res) => {
     // Filter out the user ID from the likeds array
     const updatedLikeds = product.likeds.filter((el) => el != liked);
 
-    // If the liked array has changed, update it
-    if (updatedLikeds.length !== product.likeds.length) {
-      product.likeds = updatedLikeds;
-      await product.save();
-      return res.status(200).json({ message: "Liked successfully deleted!", product });
-    } else {
-      return res.status(400).json({ message: "User has not liked this product" });
-    }
+    product.likeds = updatedLikeds;
+    await product.save();
+    return res.status(200).json({ message: "Liked successfully deleted!", product });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
