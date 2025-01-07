@@ -58,10 +58,27 @@ router.post("/register", async (req, res) => {
 });
 
 // LOGIN/TOKEN
-router.post("/login", async (req, res) => {
+router.post("/login/admin", async (req, res) => {
   try {
     let { username, password } = req.body;
-    let user = await Users.findOne({ username });
+    let user = await Users.findOne({ username, type: "admin" });
+    if (!user) return res.status(400).json({ message: "Username or password is invalid" });
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Invalid username or password" });
+    }
+    const token = jwt.sign({ id: user._id, username: user.username, type: user.type }, process.env.JWT_SECRET, { expiresIn: "15h" });
+    res.json({ token, userId: user._id, userName: user.name });
+  } catch (err) {
+    res.json({
+      message: err.message,
+    });
+  }
+});
+router.post("/login/user", async (req, res) => {
+  try {
+    let { username, password } = req.body;
+    let user = await Users.findOne({ username, type: "user" });
     if (!user) return res.status(400).json({ message: "Username or password is invalid" });
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
