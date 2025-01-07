@@ -8,7 +8,6 @@ const UsersSchema = new mongoose.Schema({
     enum: ["admin", "user"],
     required: true,
   },
-  likedProducts: { type: Array, required: false, default: [] },
 });
 
 const Users = mongoose.model("Users", UsersSchema);

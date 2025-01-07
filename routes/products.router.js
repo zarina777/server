@@ -27,6 +27,7 @@ router.post("/", async (req, res) => {
       price,
       category,
       user,
+      likedUsers: [],
     });
     await newProduct.save();
     res.status(201).json(newProduct);
@@ -75,6 +76,49 @@ router.put("/:id", async (req, res) => {
       }
     );
     res.json({ message: "Product is successfully changed!", product });
+  } catch (err) {
+    res.json({
+      message: err.message,
+    });
+  }
+});
+router.post("/:id/likeds", async (req, res) => {
+  try {
+    const { id } = req.params;
+    let { likeds } = req.body;
+    const productLikeds = await Products.findOne(id);
+    const product = await Products.findByIdAndUpdate(
+      id,
+      {
+        likeds: [likeds, ...productLikeds.likeds],
+      },
+      {
+        new: true,
+      }
+    );
+    res.json({ message: "Liked is successfully added!", product });
+  } catch (err) {
+    res.json({
+      message: err.message,
+    });
+  }
+});
+router.delete("/:id/likeds", async (req, res) => {
+  try {
+    const { id } = req.params;
+    let { likeds } = req.body;
+    const productLikeds = await Products.findOne(id);
+    const likedsFilter = productLikeds.likeds.filter((el) => el == likeds);
+    const product = await Products.findByIdAndUpdate(
+      id,
+      {
+        likeds: likedsFilter,
+      },
+      {
+        new: true,
+      }
+    );
+    res.json({ message: "Liked is successfully deleted!", product });
   } catch (err) {
     res.json({
       message: err.message,

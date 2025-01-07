@@ -47,7 +47,7 @@ router.delete("/:id", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    let { username, type, password, liked } = req.body;
+    let { username, type, password } = req.body;
 
     if (password) {
       const validation = userSchema.safeParse(req.body);
@@ -62,7 +62,7 @@ router.put("/:id", async (req, res) => {
         });
       }
 
-      const validUser = { ...validation.data, liked };
+      const validUser = validation.data;
       const existUser = await Users.findOne({ username: validUser.username });
       if (existUser) {
         return res.status(400).json({
@@ -78,7 +78,6 @@ router.put("/:id", async (req, res) => {
           username,
           type,
           password: hashedPassword,
-          liked,
         },
         {
           new: true,
@@ -90,7 +89,6 @@ router.put("/:id", async (req, res) => {
         {
           username,
           type,
-          liked,
         },
         {
           new: true,
