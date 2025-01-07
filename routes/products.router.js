@@ -87,15 +87,28 @@ router.post("/:id/likeds", async (req, res) => {
     const { id } = req.params;
     let { liked } = req.body;
     const productLikeds = await Products.findOne(id);
-    const product = await Products.findByIdAndUpdate(
-      id,
-      {
-        likeds: [liked, ...productLikeds.likeds],
-      },
-      {
-        new: true,
-      }
-    );
+    let product;
+    if (productLikeds) {
+      product = await Products.findByIdAndUpdate(
+        id,
+        {
+          likeds: [liked, ...productLikeds.likeds],
+        },
+        {
+          new: true,
+        }
+      );
+    } else {
+      product = await Products.findByIdAndUpdate(
+        id,
+        {
+          likeds: [liked],
+        },
+        {
+          new: true,
+        }
+      );
+    }
     res.json({ message: "Liked is successfully added!", product });
   } catch (err) {
     res.json({
