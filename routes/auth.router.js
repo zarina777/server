@@ -43,11 +43,13 @@ router.post("/register", async (req, res) => {
     const newUser = new Users(validUser);
     await newUser.save();
 
-    res.status(201).json({
-      success: true,
-      message: "User registered successfully",
-      user: { id: newUser._id, username: newUser.username, type: newUser.type },
-    });
+    // res.status(201).json({
+    //   success: true,
+    //   message: "User registered successfully",
+    //   user: { id: newUser._id, username: newUser.username, type: newUser.type },
+    // });
+    const token = jwt.sign({ id: newUser._id, username: newUser.username, type: newUser.type }, process.env.JWT_SECRET, { expiresIn: "15h" });
+    res.status(201).json({ token, userId: newUser._id, userName: newUser.username, success: true });
   } catch (err) {
     console.error("Error during registration:", err);
     res.status(500).json({
@@ -68,7 +70,7 @@ router.post("/login/admin", async (req, res) => {
       return res.status(400).json({ message: "Invalid username or password" });
     }
     const token = jwt.sign({ id: user._id, username: user.username, type: user.type }, process.env.JWT_SECRET, { expiresIn: "15h" });
-    res.json({ token, userId: user._id, userName: user.name });
+    res.json({ token, userId: user._id, userName: user.username });
   } catch (err) {
     res.json({
       message: err.message,
