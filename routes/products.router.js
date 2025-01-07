@@ -85,12 +85,12 @@ router.put("/:id", async (req, res) => {
 router.post("/:id/likeds", async (req, res) => {
   try {
     const { id } = req.params;
-    let { likeds } = req.body;
+    let { liked } = req.body;
     const productLikeds = await Products.findOne(id);
     const product = await Products.findByIdAndUpdate(
       id,
       {
-        likeds: [likeds, ...productLikeds.likeds],
+        likeds: [liked, ...productLikeds.likeds],
       },
       {
         new: true,
@@ -106,9 +106,9 @@ router.post("/:id/likeds", async (req, res) => {
 router.delete("/:id/likeds", async (req, res) => {
   try {
     const { id } = req.params;
-    let { likeds } = req.body;
+    let { liked } = req.body;
     const productLikeds = await Products.findOne(id);
-    const likedsFilter = productLikeds.likeds.filter((el) => el == likeds);
+    const likedsFilter = productLikeds.likeds.filter((el) => el == liked);
     const product = await Products.findByIdAndUpdate(
       id,
       {

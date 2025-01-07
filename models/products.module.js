@@ -4,7 +4,7 @@ const ProductsSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   category: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "Categories" },
   user: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "Users" },
-  likedUsers: { type: Array, required: false, default: [] },
+  likeds: { type: Array, required: false, default: [] },
 });
 const Products = mongoose.model("Products", ProductsSchema);
 module.exports = Products;
