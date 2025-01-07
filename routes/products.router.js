@@ -110,7 +110,7 @@ router.post("/:id/likeds", async (req, res) => {
 router.delete("/:id/likeds", async (req, res) => {
   try {
     const { id } = req.params;
-    const { liked } = req.body; // Expect just liked (user ID)
+    const { liked } = req.body; // Expect liked as part of the body
 
     const product = await Products.findById(id);
     if (!product) {
@@ -132,4 +132,5 @@ router.delete("/:id/likeds", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
 module.exports = router;
